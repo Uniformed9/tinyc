@@ -29,11 +29,11 @@ typedef enum
     /* book-keeping tokens */
    {ENDFILE,ERROR,
     /* reserved words */
-    IF,THEN,ELSE,END,REPEAT,UNTIL,READ,WRITE,
+    IF,THEN,ELSE,END,REPEAT,UNTIL,READ,WRITE,//和语句有关的token
     /* multicharacter tokens */
     ID,NUM,
     /* special symbols */
-    ASSIGN,EQ,LT,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,SEMI
+    ASSIGN,EQ,LT,GT,UQ,EQOLT,EQOGT,EEQ,PLUS,MINUS,TIMES,OVER,LPAREN,RPAREN,SEMI//EQ等于，LT小于,GT大于，OVER除，TIMES乘，SEMI分号，LPAREN左括号，RPAREN右括号
    } TokenType;
 
 extern FILE* source; /* source code text file */
@@ -46,9 +46,9 @@ extern int lineno; /* source line number for listing */
 /***********   Syntax tree for parsing ************/
 /**************************************************/
 
-typedef enum {StmtK,ExpK} NodeKind;
-typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK} ExpKind;
+typedef enum {StmtK,ExpK} NodeKind;//语句和表达式
+typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;//语句,一定是由一个个句子组成的，表达式是属于语句里面的
+typedef enum {OpK,ConstK,IdK} ExpKind;//表达式，算符表达式，常量表达式，和标识符表达式
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
@@ -58,7 +58,7 @@ typedef enum {Void,Integer,Boolean} ExpType;
 typedef struct treeNode
    { struct treeNode * child[MAXCHILDREN];
      struct treeNode * sibling;
-     int lineno;
+     int lineno;//打印错误的源码行数
      NodeKind nodekind;
      union { StmtKind stmt; ExpKind exp;} kind;
      union { TokenType op;

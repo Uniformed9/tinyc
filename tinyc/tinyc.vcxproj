@@ -24,6 +24,7 @@
     <ProjectGuid>{ce471fa3-5c64-499b-b476-7451175d1475}</ProjectGuid>
     <RootNamespace>tinyc</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>c--</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

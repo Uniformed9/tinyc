@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INASSIGN,INCOMMENT,INNUM,INID,DONE }
+   { START,INASSIGN,INUNEQUAL,INLESSER,INGREATER,INCOMMENT,INNUM,INID,DONE }
    StateType;
 
 /* lexeme of identifier or reserved word */
@@ -91,12 +91,20 @@ TokenType getToken(void)
      switch (state)
      { case START:
          if (isdigit(c))
-           state = INNUM;
+             state = INNUM;
          else if (isalpha(c))
-           state = INID;
-         else if (c == ':')
-           state = INASSIGN;
-         else if ((c == ' ') || (c == '\t') || (c == '\n'))
+             state = INID;
+         /*else if (c == ':')
+             state = INASSIGN;*/
+         else if (c == '=')
+             state = INASSIGN;
+         else if (c == '!')
+             state = INUNEQUAL;
+         else if (c == '<')
+             state = INLESSER;
+         else if (c == '>')
+             state = INGREATER;
+         else if ((c == ' ') || (c == '\t') || (c == '\n'))//如果是这三个，重新循环下一个字符，状态仍然是START
            save = FALSE;
          else if (c == '{')
          { save = FALSE;
@@ -109,12 +117,15 @@ TokenType getToken(void)
                save = FALSE;
                currentToken = ENDFILE;
                break;
-             case '=':
+             /*case '=':
                currentToken = EQ;
-               break;
-             case '<':
+               break;*/
+            /* case '<':
                currentToken = LT;
                break;
+             case '>'://原来的判断<>token的函数
+                 currentToken = GT;
+                 break;*/
              case '+':
                currentToken = PLUS;
                break;
@@ -153,14 +164,50 @@ TokenType getToken(void)
        case INASSIGN:
          state = DONE;
          if (c == '=')
-           currentToken = ASSIGN;
+           currentToken = EQ;
          else
-         { /* backup in the input */
+         { /* backup in the input,一个等号是assigin，两个等号是布尔表达式== */
            ungetNextChar();
            save = FALSE;
-           currentToken = ERROR;
+           currentToken = ASSIGN;
          }
          break;
+         //新增代码
+       case INUNEQUAL:
+           state = DONE;
+           if (c == '=')
+               currentToken =UQ ;
+           else
+           { /* backup in the input */
+               ungetNextChar();
+               save = FALSE;//不保存并回退一格
+               currentToken = ERROR;
+           }
+           break;
+           //新增代码
+       case INLESSER:
+           state = DONE;
+           if (c == '=')
+               currentToken = EQOLT;
+           else
+           { /* backup in the input */
+               ungetNextChar();
+               save = FALSE;
+               currentToken = LT;
+           }
+           break;
+           //新增代码
+       case INGREATER:
+           state = DONE;
+           if (c == '=')
+               currentToken = EQOGT;
+           else
+           { /* backup in the input */
+               ungetNextChar();
+               save = FALSE;
+               currentToken = GT;
+           }
+           break;
        case INNUM:
          if (!isdigit(c))
          { /* backup in the input */

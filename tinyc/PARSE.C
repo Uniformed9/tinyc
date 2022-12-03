@@ -32,7 +32,7 @@ static void syntaxError(char * message)
 }
 
 static void match(TokenType expected)
-{ if (token == expected) token = getToken();
+{ if (token == expected) token = getToken();//判断当前是否匹配，匹配的话指向下一个token
   else {
     syntaxError("unexpected token -> ");
     printToken(token,tokenString);
@@ -126,7 +126,7 @@ TreeNode * write_stmt(void)
 
 TreeNode * exp(void)
 { TreeNode * t = simple_exp();
-  if ((token==LT)||(token==EQ)) {
+  if ((token==LT)||(token==EQ)) {//表达式除了简单的包括加减乘除的表达式和布尔表达式
     TreeNode * p = newExpNode(OpK);
     if (p!=NULL) {
       p->child[0] = t;
@@ -143,7 +143,7 @@ TreeNode * exp(void)
 TreeNode * simple_exp(void)
 { TreeNode * t = term();
   while ((token==PLUS)||(token==MINUS))
-  { TreeNode * p = newExpNode(OpK);
+  { TreeNode * p = newExpNode(OpK);//表达式结点
     if (p!=NULL) {
       p->child[0] = t;
       p->attr.op = token;
@@ -208,7 +208,7 @@ TreeNode * factor(void)
 TreeNode * parse(void)
 { TreeNode * t;
   token = getToken();
-  t = stmt_sequence();
+  t = stmt_sequence();//一段源程序由不同的语句组成
   if (token!=ENDFILE)
     syntaxError("Code ends before file\n");
   return t;

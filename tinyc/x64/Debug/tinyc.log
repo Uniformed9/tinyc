@@ -1,1 +1,4 @@
-﻿  tinyc.vcxproj -> D:\vs2022\tinyc\x64\Debug\tinyc.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(514,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(tinyc.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+  SCAN.C
+D:\vs2022\tinyc\tinyc\SCAN.C(37,17): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  tinyc.vcxproj -> D:\vs2022\tinyc\x64\Debug\c--.exe
