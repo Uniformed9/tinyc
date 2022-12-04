@@ -140,7 +140,7 @@ TreeNode * exp(void)
   return t;
 }
 
-TreeNode * simple_exp(void)
+TreeNode * simple_exp(void)//简单表达式包括所有 带括号的加减乘除运算
 { TreeNode * t = term();
   while ((token==PLUS)||(token==MINUS))
   { TreeNode * p = newExpNode(OpK);//表达式结点

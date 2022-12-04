@@ -1,4 +1,4 @@
 if 0 < 1 then 
   fact = 1;
-  write fact  { output factorial of x }
+  write fact  /* output fact*orial of x */
 end

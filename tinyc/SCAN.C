@@ -11,7 +11,7 @@
 
 /* states in scanner DFA */
 typedef enum
-   { START,INASSIGN,INUNEQUAL,INLESSER,INGREATER,INCOMMENT,INNUM,INID,DONE }
+   { START,INASSIGN,INUNEQUAL,INLESSER,INGREATER,INCOMMENT,INJUDGE_LEFT_ASTER,INJUDGE_RIGHT_SLASH_BAR,INNUM,INID,DONE }
    StateType;
 
 /* lexeme of identifier or reserved word */
@@ -106,9 +106,14 @@ TokenType getToken(void)
              state = INGREATER;
          else if ((c == ' ') || (c == '\t') || (c == '\n'))//如果是这三个，重新循环下一个字符，状态仍然是START
            save = FALSE;
-         else if (c == '{')
+         /*else if (c == '{')
          { save = FALSE;
            state = INCOMMENT;
+         }*/
+         else if (c == '/')
+         {
+             save = FALSE;
+             state = INJUDGE_LEFT_ASTER;
          }
          else
          { state = DONE;
@@ -135,9 +140,9 @@ TokenType getToken(void)
              case '*':
                currentToken = TIMES;
                break;
-             case '/':
+             /*case '/':
                currentToken = OVER;
-               break;
+               break;*/
              case '(':
                currentToken = LPAREN;
                break;
@@ -153,14 +158,58 @@ TokenType getToken(void)
            }
          }
          break;
-       case INCOMMENT:
+     case INJUDGE_LEFT_ASTER:
+         save = FALSE;
+         if (c == '*') {
+             state = INCOMMENT;
+         }
+         else
+         {
+             ungetNextChar();
+             save = FALSE;
+             currentToken = OVER;
+         }
+     case INCOMMENT:
+         save = FALSE;
+         if (c == EOF)
+         {
+             state = DONE;
+             currentToken = ENDFILE;
+         }
+         else if (c == '*') state = INJUDGE_RIGHT_SLASH_BAR;
+         break;
+     case INJUDGE_RIGHT_SLASH_BAR:
+         save = FALSE;
+         if (c == EOF)
+         {
+             state = DONE;
+             currentToken = ENDFILE;
+         }
+         else if (c == '/') state = START;
+         else {
+             state = INCOMMENT;
+         }
+         break;
+       /*case INCOMMENT:
          save = FALSE;
          if (c == EOF)
          { state = DONE;
            currentToken = ENDFILE;
          }
          else if (c == '}') state = START;
-         break;
+         break;*/
+      
+       //case INASSIGN:
+       //    state = DONE;
+       //    if (c == '=')
+       //        currentToken = ASSIGN;
+       //    else
+       //    { /* backup in the input */
+       //        ungetNextChar();
+       //        save = FALSE;
+       //        currentToken = ERROR;
+       //    }
+       //    break;
        case INASSIGN:
          state = DONE;
          if (c == '=')
